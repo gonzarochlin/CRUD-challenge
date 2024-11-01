@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "ESNext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "baseUrl": "./src",
+        "moduleResolution": "node",
+        "resolveJsonModule": true
+    },
+    "include": ["src/**/*", "src/**/*.ts", "src/**/*.tsx"],
+    "exclude": ["node_modules"]
+}

@@ -1,6 +1,6 @@
-import app from './app.js';
-import sequelize from './config/database.js';
-import seedDatabase from './seed.js';
+import app from './app';
+import sequelize from './config/database';
+import seedDatabase from './seed';
 
 const PORT = process.env.PORT || 3000;
 

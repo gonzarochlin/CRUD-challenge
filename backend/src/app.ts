@@ -1,6 +1,6 @@
 import express from 'express';
-import employeeRoutes from './routes/employeeRoutes.js';
-import departmentRoutes from './routes/departmentRoutes.js';
+import employeeRoutes from './routes/employee.routes';
+import departmentRoutes from './routes/department.routes';
 
 const app = express();
 
