@@ -10,6 +10,7 @@ interface EmployeeAttributes {
     departmentId: number;
     phone: string;
     address: string;
+    isActive: boolean;
 }
 
 class Employee extends Model<EmployeeAttributes> implements EmployeeAttributes {
@@ -20,6 +21,7 @@ class Employee extends Model<EmployeeAttributes> implements EmployeeAttributes {
     public departmentId!: number;
     public phone!: string;
     public address!: string;
+    public isActive!: boolean;
 
     // Timestamps
     public readonly createdAt!: Date;
@@ -55,6 +57,11 @@ Employee.init(
         },
         address: {
             type: DataTypes.STRING,
+            allowNull: false,
+        },
+        isActive: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
             allowNull: false,
         },
     },

@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { IEmployee } from '../types/types';
 import Employee from './Employee';
 import EmployeeCreationForm from './EmployeeCreationForm';
+import EmployeeDetails from './EmployeeDetails';
+import { getAllEmployees, getEmployeeById, createEmployee } from '../services/api';
 
 const EmployeeList = (): JSX.Element => {
     const [employees, setEmployees] = useState<IEmployee[]>([]);
     const [showCreationModal, setShowCreationModal] = useState(false);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
 
-    // Fetch employees from the server
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/employees');
+                const response = await getAllEmployees();
                 setEmployees(response.data);
             } catch (error) {
                 console.error('Failed to fetch employees:', error);
@@ -23,7 +24,7 @@ const EmployeeList = (): JSX.Element => {
 
     const deleteEmployee = async (id: number) => {
         try {
-            await axios.delete(`http://localhost:3000/employees/${id}`);
+            await deleteEmployee(id);
             setEmployees(employees.filter((emp) => emp.id !== id));
         } catch (error) {
             console.error('Failed to delete employee:', error);
@@ -32,32 +33,32 @@ const EmployeeList = (): JSX.Element => {
 
     const detailsEmployee = async (id: number) => {
         try {
-            const employeeDetails = await axios.get(`http://localhost:3000/employees/${id}`);
+            setSelectedEmployeeId(id);
+            const employeeDetails = await getEmployeeById(id);
             console.log('detailsEmployee', employeeDetails.data)
         } catch (error) {
             console.error('Failed to get employee:', error);
         }
     };
 
-    const createEmployee = async (employee: IEmployee) => {
+    const onCreateEmployee = async (employee: IEmployee) => {
         try {
-            const data = JSON.stringify(employee); 
-            const config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'http://localhost:3000/employees/',
-                headers: { 
-                    'Content-Type': 'application/json'
-                },
-                data,
-            };
-            const newEmployeeResponse = await axios.request(config);
+            const newEmployeeResponse = await createEmployee(employee);
             setEmployees([...employees, {...employee, id: newEmployeeResponse.data.id}]);
         } catch (error) {
             console.error('Failed to create employee:', error);
         }
     };
-
+    
+    if(selectedEmployeeId) {
+        return (
+            <EmployeeDetails
+                employeeId={selectedEmployeeId}
+                onClose={() => setSelectedEmployeeId(null)}
+            />
+        )
+    }
+    
     return (
         <div className="employee-list">
             <h1>Employees</h1>
@@ -79,7 +80,7 @@ const EmployeeList = (): JSX.Element => {
                 <div className="modal">
                     <EmployeeCreationForm
                         onClose={() => setShowCreationModal(false)}
-                        onCreateEmployee={(employee: IEmployee) => createEmployee(employee)}
+                        onCreateEmployee={(employee: IEmployee) => onCreateEmployee(employee)}
                     />
                 </div>
             )}

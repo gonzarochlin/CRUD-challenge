@@ -1,4 +1,4 @@
-import Department from './models/department.model';
+import Department from '../models/department.model';
 
 async function seedDatabase() {
     try {

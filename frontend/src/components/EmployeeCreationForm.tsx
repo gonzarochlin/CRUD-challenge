@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { IDepartment, IEmployee, } from '../types/types';
+import { getAllDepartments } from '../services/api';
 
 interface EmployeeCreationFormProps {
   onClose: () => void;
@@ -23,7 +23,7 @@ const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const departmentsRes = await axios.get('http://localhost:3000/departments');
+        const departmentsRes = await getAllDepartments();
         setDepartments(departmentsRes.data);
       } catch (error) {
         console.error('Error fetching departments:', error);
@@ -106,7 +106,7 @@ const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => 
           </div>
         </div>
         <div className='employee-creation-buttons'>
-          <button className='button-red' onClick={onClose}>
+          <button className='button-close' onClick={onClose}>
             Cancel
           </button>
           <input type="submit" value='Create' className='button-green' />
