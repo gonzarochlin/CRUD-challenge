@@ -2,7 +2,7 @@ import app from './app';
 import sequelize from './config/database';
 import seedDatabase from './seeders/seed';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 80;
 
 sequelize.sync({ alter: true })
     .then(async () => {

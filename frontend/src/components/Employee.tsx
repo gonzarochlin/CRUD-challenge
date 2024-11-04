@@ -11,6 +11,7 @@ const Employee = (props: IEmployeeProps): JSX.Element => {
         lastName,
         department,
         hireDate,
+        isActive,
     } = employee;
 
     return (
@@ -18,8 +19,9 @@ const Employee = (props: IEmployeeProps): JSX.Element => {
             <div className='employee-info'>
                 <div className='employee-avatar-container'>
                     <img
-                    src={userAvatar}
-                    alt='Employee Avatar'
+                        src={userAvatar}
+                        alt='Employee Avatar'
+                        className={!isActive ? 'avatar-inactive' : undefined}    
                     />
                 </div>
                 <div className='employee-data-container'>

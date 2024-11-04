@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { IEmployee, IDepartment } from '../types/types';
 import userAvatar from '../userAvatar.png';
 import { formatHireDate } from '../utils/date';
-import { getAllDepartments, getEmployeeById, updateEmployee } from '../services/api';
+import { useGetAllDepartmentsQuery, useUpdateEmployeeMutation, useGetEmployeeByIdQuery } from '../redux/services/employeeApi';
 
 interface EmployeeDetailsProps {
   employeeId: number;
@@ -10,30 +9,19 @@ interface EmployeeDetailsProps {
 }
 
 const EmployeeDetails = ({ employeeId, onClose }: EmployeeDetailsProps): JSX.Element => {
-  const [employee, setEmployee] = useState<IEmployee | null>(null);
-  const [departments, setDepartments] = useState<IDepartment[]>([]);
-  const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
-  const [isModified, setIsModified] = useState(false);
-  const [isActive, setIsActive] = useState(true);
+    const { data: employee } = useGetEmployeeByIdQuery(employeeId);
+    const { data: departments } = useGetAllDepartmentsQuery();
+    
+    const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
+    const [isModified, setIsModified] = useState(false);
+    const [isActive, setIsActive] = useState(false);
 
-  // Fetch employee details and department list
+    const [updateEmployee] = useUpdateEmployeeMutation();
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [employeeRes, departmentsRes] = await Promise.all([
-                    getEmployeeById(employeeId),
-                    getAllDepartments(),
-                ]);
-                setEmployee(employeeRes.data);
-                setDepartments(departmentsRes.data);
-                setSelectedDepartment(employeeRes.data.departmentId);
-                setIsActive(employeeRes.data.isActive);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
-    }, [employeeId]);
+        setIsActive(!!employee?.isActive);
+        setSelectedDepartment(employee?.department.id || null);
+    }, [employee]);
 
     const handleDepartmentChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const newDepartmentId = parseInt(event.target.value);
@@ -44,8 +32,7 @@ const EmployeeDetails = ({ employeeId, onClose }: EmployeeDetailsProps): JSX.Ele
     const handleUpdateDepartment = async () => {
         if (!employee) return;
         try {
-            await updateEmployee(employee.id!, { departmentId: selectedDepartment })
-            setEmployee({ ...employee, departmentId: selectedDepartment! });
+            await updateEmployee({ id: employeeId, data: { departmentId: selectedDepartment! } });
             setIsModified(false);
         } catch (error) {
             console.error('Error updating department:', error);
@@ -55,7 +42,7 @@ const EmployeeDetails = ({ employeeId, onClose }: EmployeeDetailsProps): JSX.Ele
     const handleToggleStatus = async () => {
         if (!employee) return;
         try {
-            await updateEmployee(employee.id!, { isActive: !isActive })
+            await updateEmployee({ id: employee.id!, data: { isActive: !isActive } })
             setIsActive(!isActive);
         } catch (error) {
             console.error('Error updating status:', error);
@@ -98,7 +85,7 @@ const EmployeeDetails = ({ employeeId, onClose }: EmployeeDetailsProps): JSX.Ele
                 <div className='employee-department-form'>
                     <b>Update Department:</b>
                     <select value={selectedDepartment ?? ''} onChange={handleDepartmentChange}>
-                        {departments.map((dept) => (
+                        {departments?.map((dept) => (
                             <option key={dept.id} value={dept.id}>
                                 {dept.name}
                             </option>

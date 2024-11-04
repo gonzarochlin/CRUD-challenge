@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { IDepartment, IEmployee, } from '../types/types';
-import { getAllDepartments } from '../services/api';
+import React, { useState } from 'react';
+import { IEmployee, } from '../types/types';
+import { useCreateEmployeeMutation, useGetAllDepartmentsQuery } from '../redux/services/employeeApi';
 
 interface EmployeeCreationFormProps {
   onClose: () => void;
-  onCreateEmployee: (employee: IEmployee) => void; 
 }
 
 const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => {
-  const { onClose, onCreateEmployee } = props;
-
-  const [departments, setDepartments] = useState<IDepartment[]>([]);
+  const { onClose } = props;
   
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -19,19 +16,8 @@ const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => 
   const [hireDate, setHireDate] = useState(new Date().toISOString().substring(0,10));
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
 
-  // Fetch employee details and department list
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const departmentsRes = await getAllDepartments();
-        setDepartments(departmentsRes.data);
-      } catch (error) {
-        console.error('Error fetching departments:', error);
-      }
-    };
-
-    fetchDepartments();
-  }, []);
+  const [createEmployee] = useCreateEmployeeMutation();
+  const { data: departments, error, isLoading } = useGetAllDepartmentsQuery();
 
   const handleDepartmentChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newDepartmentId = parseInt(event.target.value);
@@ -47,7 +33,7 @@ const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => 
     setSelectedDepartment(null);
   }
 
-  const handleCreate = (event: React.ChangeEvent<HTMLFormElement>) => {
+  const handleCreate = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     if(!selectedDepartment) return;
 
@@ -58,12 +44,11 @@ const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => 
       phone,
       address,
       departmentId: selectedDepartment,
-      department: departments.filter(dept => dept.id === selectedDepartment)[0],
+      department: departments!.filter(dept => dept.id === selectedDepartment)[0],
+      isActive: true,
     };
 
-    console.log(departments, selectedDepartment)
-
-    onCreateEmployee(employeeToCreate);
+    await createEmployee(employeeToCreate);
     clearForm();
   }
 
@@ -97,7 +82,7 @@ const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => 
             <label>Department</label>
             <select value={selectedDepartment ?? ''} onChange={handleDepartmentChange} required>
               <option value=''>Select a department</option>
-              {departments.map((dept) => (
+              {departments?.map((dept) => (
                 <option key={dept.id} value={dept.id}>
                   {dept.name}
                 </option>

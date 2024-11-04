@@ -7,6 +7,7 @@ export interface IEmployee {
     phone: string;
     address: string;
     departmentId?: number;
+    isActive: boolean;
 }
 
 export interface IDepartment {

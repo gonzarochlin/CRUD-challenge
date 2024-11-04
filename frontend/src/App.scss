@@ -55,9 +55,10 @@ input, select, textarea {
 }
 
 .employee-list {
-  max-width: 65%;
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   
   h1 {
     text-align: center;
@@ -99,6 +100,9 @@ input, select, textarea {
     img {
       max-width: 50px;
     }
+    .avatar-inactive {
+      filter: grayscale(1);
+    }
   }
   
   .employee-info {
@@ -126,10 +130,6 @@ input, select, textarea {
       font-size: 0.9em;
     }
   }
-  
-  .employee-buttons-container {
-  
-  }
 }
 
 .employee-creation-container {
@@ -146,11 +146,10 @@ input, select, textarea {
     label {
       padding: 12px 12px 12px 0;
     }
-
-    .employee-creation-buttons {
-      display: flex;
-      flex-direction: column;
-    }
+  }
+  .employee-creation-buttons {
+    display: flex;
+    justify-content: center;
   }
 }
 
@@ -229,5 +228,22 @@ input, select, textarea {
         margin-left: 8px;
       }
     }
+  }
+}
+
+
+@media (max-width: 769px) { 
+  .employee-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 481px) {
+  .employee-info {
+    flex-direction: column;
+  }
+
+  .employee-details-container .employee-details-avatar-hiredate {
+    flex-direction: column;
   }
 }
