@@ -29,3 +29,12 @@ export interface IEmployeeDepartmentHistory {
     previousDepartment: IDepartment;
     previousDepartmentId: number;
 }
+
+export interface EmployeeDetailsProps {
+    employeeId: number;
+    onClose: () => void;
+}
+
+export interface EmployeeCreationFormProps {
+    onClose: () => void;
+}

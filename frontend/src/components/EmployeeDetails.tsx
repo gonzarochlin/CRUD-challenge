@@ -7,11 +7,7 @@ import {
     useGetEmployeeByIdQuery,
     useGetEmployeeDepartmentsHistoryByIdQuery,
 } from '../redux/services/employeeApi';
-
-interface EmployeeDetailsProps {
-  employeeId: number;
-  onClose: () => void;
-}
+import { EmployeeDetailsProps } from '../types/types';
 
 const EmployeeDetails = ({ employeeId, onClose }: EmployeeDetailsProps): JSX.Element => {
     const { data: employee } = useGetEmployeeByIdQuery(employeeId);

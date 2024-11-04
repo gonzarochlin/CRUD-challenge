@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { IEmployee, } from '../types/types';
 import { useCreateEmployeeMutation, useGetAllDepartmentsQuery } from '../redux/services/employeeApi';
-
-interface EmployeeCreationFormProps {
-  onClose: () => void;
-}
+import { EmployeeCreationFormProps } from '../types/types';
 
 const EmployeeCreationForm = (props: EmployeeCreationFormProps): JSX.Element => {
   const { onClose } = props;
