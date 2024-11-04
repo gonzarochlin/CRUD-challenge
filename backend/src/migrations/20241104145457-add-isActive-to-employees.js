@@ -1,3 +1,4 @@
+import { DataTypes } from 'sequelize';
 'use strict';
 
 export async function up(queryInterface, Sequelize) {

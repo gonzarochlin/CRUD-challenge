@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IDepartment, IEmployee } from '../../types/types';
+import { IDepartment, IEmployee, IEmployeeDepartmentHistory } from '../../types/types';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:80';
 
 export const employeeApi = createApi({
     reducerPath: 'employeeApi',
     baseQuery: fetchBaseQuery({ baseUrl: API_BASE_URL }),
-    tagTypes: ['Employee', 'Department'],
+    tagTypes: ['Employee', 'Department', 'EmployeeDepartmentHistory'],
     endpoints: (builder) => ({
         getAllEmployees: builder.query<IEmployee[], void>({
             query: () => '/employees',
@@ -25,6 +25,13 @@ export const employeeApi = createApi({
         getEmployeeById: builder.query<IEmployee, number>({
             query: (id) => `/employees/${id}`,
             providesTags: (result, error, id) => [{ type: 'Employee', id }],
+        }),
+        getEmployeeDepartmentsHistoryById: builder.query<IEmployeeDepartmentHistory[], number>({
+            query: (id) => `/employees/${id}/history`,
+            providesTags: (result) =>
+                result
+                    ? [...result.map(({ id }) => ({ type: 'EmployeeDepartmentHistory' as const, id })), { type: 'EmployeeDepartmentHistory', id: 'LIST' }]
+                    : [{ type: 'EmployeeDepartmentHistory', id: 'LIST' }],
         }),
         createEmployee: builder.mutation<void, Partial<IEmployee>>({
             query: (employee) => ({
@@ -57,6 +64,7 @@ export const {
     useGetAllEmployeesQuery,
     useGetAllDepartmentsQuery,
     useGetEmployeeByIdQuery,
+    useGetEmployeeDepartmentsHistoryByIdQuery,
     useCreateEmployeeMutation,
     useUpdateEmployeeMutation,
     useDeleteEmployeeMutation,

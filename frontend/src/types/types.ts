@@ -20,3 +20,12 @@ export interface IEmployeeProps {
     onDeleteEmployee: (id: number) => void;
     onClickDetails: (id: number) => void;
 }
+
+export interface IEmployeeDepartmentHistory {
+    id?: number;
+    changeDate: Date;
+    newDepartment: IDepartment;
+    newDepartmentId: number;
+    previousDepartment: IDepartment;
+    previousDepartmentId: number;
+}

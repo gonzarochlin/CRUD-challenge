@@ -11,6 +11,7 @@ interface EmployeeAttributes {
     phone: string;
     address: string;
     isActive: boolean;
+    deletedAt?: Date | null;
 }
 
 class Employee extends Model<EmployeeAttributes> implements EmployeeAttributes {
@@ -26,6 +27,7 @@ class Employee extends Model<EmployeeAttributes> implements EmployeeAttributes {
     // Timestamps
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+    public deletedAt!: Date;
 }
 
 Employee.init(
@@ -68,6 +70,7 @@ Employee.init(
     {
         sequelize,
         modelName: 'employee',
+        paranoid: true, // Enables soft deletes and adds deletedAt column
     }
 );
 
