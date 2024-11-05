@@ -38,6 +38,11 @@ Create a `.env` file in the root of the backend directory with the following var
 
 ```
 DATABASE_URL=postgres://<username>:<password>@localhost:5432/<database_name>
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+DB_NAME=my_database
+DB_HOST=localhost
+DB_PORT=5432
 PORT=80
 ```
 

@@ -113,8 +113,8 @@ const EmployeeDetails = ({ employeeId, onClose }: EmployeeDetailsProps): JSX.Ele
                 <table>
                     <thead>
                     <tr>
-                        <th>Change Date</th>
-                        <th>New Department</th>
+                        <th>Date</th>
+                        <th>Department</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -122,7 +122,7 @@ const EmployeeDetails = ({ employeeId, onClose }: EmployeeDetailsProps): JSX.Ele
                         employeeDepartmentHistory.map((historyItem: any) => (
                             <tr key={historyItem.id}>
                                 <td>{new Date(historyItem.changeDate).toLocaleDateString()}</td>
-                                <td>{historyItem.newDepartment.name}</td>
+                                <td>{historyItem.previousDepartment.name}</td>
                             </tr>
                         ))
                     ) : (
